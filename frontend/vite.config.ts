@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import commonjs from "@rollup/plugin-commonjs";
 import path from "path";
 
 export default defineConfig({
@@ -7,6 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@mediapipe/tasks-vision": path.resolve(
+        __dirname,
+        "node_modules/@mediapipe/tasks-vision/vision_bundle.mjs"
+      ),
     },
   },
   optimizeDeps: {
@@ -14,7 +19,7 @@ export default defineConfig({
   },
   worker: {
     rollupOptions: {
-      plugins: [],
+      plugins: [commonjs()],
     },
   },
 });
