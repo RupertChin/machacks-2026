@@ -8,10 +8,16 @@ export function useVoice() {
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(async (sharedStream?: MediaStream | null) => {
     try {
       if (!streamRef.current) {
-        streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Prefer shared stream's audio track (avoids getUserMedia from non-user-gesture context)
+        const audioTrack = sharedStream?.getAudioTracks()[0];
+        if (audioTrack) {
+          streamRef.current = new MediaStream([audioTrack]);
+        } else {
+          streamRef.current = await navigator.mediaDevices.getUserMedia({ audio: true });
+        }
       }
 
       const stream = streamRef.current;

@@ -28,7 +28,7 @@ function App() {
   const recordingSourceRef = useRef<"button" | "gesture" | null>(null);
 
   // Gesture tracking (only suppress during button-initiated recording)
-  const { gesture, videoRef, rawLandmarks, isLoading: gesturesLoading } = useGestures(
+  const { gesture, videoRef, rawLandmarks, isLoading: gesturesLoading, getMediaStream } = useGestures(
     voiceStatus === "recording" && recordingSourceRef.current === "button"
   );
 
@@ -77,10 +77,11 @@ function App() {
 
     if (prev === curr) return;
 
-    // Peace sign started → begin recording (only if idle and not already recording)
+    // Index finger raised → begin recording (only if idle and not already recording)
     if (curr === "recording" && voiceStatus === "idle" && !isProcessing) {
       recordingSourceRef.current = "gesture";
-      startRecording();
+      // Pass shared media stream to avoid getUserMedia (which requires user gesture)
+      startRecording(getMediaStream());
     }
 
     // Peace sign ended → stop recording (only if we started it via gesture)
@@ -98,7 +99,7 @@ function App() {
           });
       }
     }
-  }, [gesture.state, voiceStatus, isProcessing, startRecording, stopRecording, sendVoiceMessage, setVoiceStatus]);
+  }, [gesture.state, voiceStatus, isProcessing, startRecording, stopRecording, sendVoiceMessage, setVoiceStatus, getMediaStream]);
 
   // Toolbar handlers
   const handleExport = useCallback(async () => {

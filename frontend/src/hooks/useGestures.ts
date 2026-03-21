@@ -114,5 +114,10 @@ export function useGestures(suppressed: boolean = false) {
     };
   }, [isLoading, error, detect]);
 
-  return { gesture, videoRef, rawLandmarks, isLoading, error };
+  // Expose the media stream so other hooks (useVoice) can share the audio track
+  const getMediaStream = useCallback((): MediaStream | null => {
+    return videoRef.current?.srcObject as MediaStream | null;
+  }, []);
+
+  return { gesture, videoRef, rawLandmarks, isLoading, error, getMediaStream };
 }
