@@ -60,6 +60,22 @@ export function VoiceControls({ status, isProcessing, onStartRecording, onStopRe
         {statusText()}
       </div>
 
+      {/* Animated wave bars (recording only) */}
+      {isRecording && (
+        <div className="flex items-center gap-1 h-6">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <div
+              key={i}
+              className="w-1 bg-red-400 rounded-full"
+              style={{
+                height: "100%",
+                animation: `audioWave 0.8s ease-in-out ${i * 0.15}s infinite`,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
       {/* Push-to-talk button */}
       <button
         onPointerDown={handlePointerDown}
@@ -68,20 +84,20 @@ export function VoiceControls({ status, isProcessing, onStartRecording, onStopRe
         onClick={handleClick}
         disabled={showProcessing}
         className={`
-          w-14 h-14 rounded-full flex items-center justify-center
+          rounded-full flex items-center justify-center
           transition-all duration-200 select-none
           ${isRecording
-            ? "bg-red-500 shadow-lg shadow-red-500/30 scale-110 animate-pulse"
+            ? "w-20 h-20 bg-red-500 shadow-[0_0_30px_rgba(239,68,68,0.5)] scale-110"
             : showProcessing
-              ? "bg-gray-700 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-500 active:scale-95 shadow-lg shadow-blue-600/20"
+              ? "w-14 h-14 bg-gray-700 cursor-not-allowed"
+              : "w-14 h-14 bg-gray-700 hover:bg-gray-600 active:scale-95 shadow-lg shadow-gray-700/20"
           }
         `}
       >
         {showProcessing ? (
           <Loader2 className="h-6 w-6 text-white animate-spin" />
         ) : (
-          <Mic className="h-6 w-6 text-white" />
+          <Mic className={`text-white ${isRecording ? "h-8 w-8" : "h-6 w-6"}`} />
         )}
       </button>
     </div>

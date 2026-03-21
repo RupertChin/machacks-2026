@@ -31,8 +31,8 @@ export function Sidebar({
     <div className="w-[30%] min-w-[300px] border-l border-gray-800 bg-gray-950 flex flex-col">
       <Tabs defaultValue="chat" className="flex flex-col flex-1 overflow-hidden">
         <TabsList className="mx-2 mt-2 bg-gray-900">
-          <TabsTrigger value="chat" className="flex-1">Chat</TabsTrigger>
-          <TabsTrigger value="constraints" className="flex-1">Constraints</TabsTrigger>
+          <TabsTrigger value="chat" className="flex-1 data-[state=active]:bg-cadence data-[state=active]:text-white">Chat</TabsTrigger>
+          <TabsTrigger value="constraints" className="flex-1 data-[state=active]:bg-cadence data-[state=active]:text-white">Constraints</TabsTrigger>
         </TabsList>
         <TabsContent value="chat" className="flex-1 overflow-hidden flex flex-col m-0">
           <ChatPanel

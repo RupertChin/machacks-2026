@@ -28,7 +28,7 @@ export function ConstraintItem({ constraint, onToggle }: ConstraintItemProps) {
             onToggle(!constraint.active);
           }}
           className={`mt-0.5 w-8 h-4 rounded-full transition-colors flex-shrink-0 ${
-            constraint.active ? "bg-blue-600" : "bg-gray-700"
+            constraint.active ? "bg-cadence" : "bg-gray-700"
           }`}
         >
           <div

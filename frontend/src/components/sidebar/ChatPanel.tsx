@@ -29,11 +29,11 @@ export function ChatPanel({ messages, isProcessing, onSendMessage }: ChatPanelPr
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={isProcessing ? "Agent working..." : "Type a command..."}
+          placeholder={isProcessing ? "Agent working..." : "Type a message..."}
           disabled={isProcessing}
           className="flex-1 bg-gray-900 border-gray-700 text-white"
         />
-        <Button type="submit" size="icon" disabled={isProcessing || !input.trim()} variant="secondary">
+        <Button type="submit" size="icon" disabled={isProcessing || !input.trim()} className="bg-cadence hover:bg-cadence-dark text-white">
           <Send className="h-4 w-4" />
         </Button>
       </form>

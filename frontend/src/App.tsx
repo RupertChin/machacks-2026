@@ -19,7 +19,7 @@ function App() {
   const { sessionId, loading: sessionLoading, error: sessionError } = useSession();
 
   // JSCAD engine + mesh management
-  const { executeTool, clearAll, getSceneObjectIds, getEngine } = useJscad(canvasRef);
+  const { executeTool, clearAll, getSceneObjectIds, getEngine, objectCount } = useJscad(canvasRef);
 
   // Voice recording
   const { status: voiceStatus, setStatus: setVoiceStatus, startRecording, stopRecording, cleanup: cleanupVoice } = useVoice();
@@ -79,6 +79,11 @@ function App() {
     await clearAll();
   }, [clearAll]);
 
+  const handleResetCamera = useCallback(() => {
+    const controller = canvasRef.current?.getCameraController();
+    controller?.reset();
+  }, []);
+
   // Camera controller from ThreeCanvas
   const cameraController = canvasRef.current?.getCameraController() ?? null;
 
@@ -100,12 +105,13 @@ function App() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-950 text-white">
+    <div className="flex flex-col h-screen w-screen bg-gray-950 text-white overflow-hidden">
       <Toolbar
         onExport={handleExport}
         onDesignReview={handleDesignReview}
         onClearScene={handleClearScene}
         isProcessing={isProcessing}
+        objectCount={objectCount}
       />
       <div className="flex flex-1 overflow-hidden">
         <Viewport
@@ -117,6 +123,8 @@ function App() {
           videoRef={videoRef}
           rawLandmarks={rawLandmarks}
           gestureState={gesture.state}
+          objectCount={objectCount}
+          onResetCamera={handleResetCamera}
         />
         <Sidebar
           messages={messages}

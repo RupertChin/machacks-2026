@@ -5,6 +5,11 @@ export default {
   theme: {
     extend: {
       colors: {
+        cadence: {
+          DEFAULT: "#06b6d4",
+          light: "#22d3ee",
+          dark: "#0891b2",
+        },
         border: "var(--border)",
         input: "var(--input)",
         ring: "var(--ring)",

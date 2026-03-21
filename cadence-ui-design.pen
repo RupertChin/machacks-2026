@@ -51,6 +51,7 @@
                   "content": "ence",
                   "fontFamily": "JetBrains Mono",
                   "fontSize": 22,
+                  "fontWeight": "normal",
                   "letterSpacing": 1
                 }
               ]
@@ -242,7 +243,8 @@
                   "lineHeight": 1.5,
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 18
+                  "fontSize": 18,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -661,7 +663,8 @@
                               "content": "Create a rectangular bracket with mounting holes, 120mm wide",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -694,7 +697,8 @@
                               "content": "Generated bracket with 4 mounting holes. Dimensions: 120x80x45mm. Ready for gesture refinement.",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -727,7 +731,8 @@
                               "content": "Add fillets to all edges, 3mm radius",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 12
+                              "fontSize": 12,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -841,7 +846,8 @@
                       "lineHeight": 1.5,
                       "textAlign": "center",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -903,7 +909,8 @@
                       "lineHeight": 1.5,
                       "textAlign": "center",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -965,7 +972,8 @@
                       "lineHeight": 1.5,
                       "textAlign": "center",
                       "fontFamily": "Inter",
-                      "fontSize": 14
+                      "fontSize": 14,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1075,7 +1083,8 @@
                       "content": "Claude interprets your voice commands and spec sheets to generate precise 3D geometry with engineering constraints.",
                       "lineHeight": 1.5,
                       "fontFamily": "Inter",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1137,7 +1146,8 @@
                       "content": "MediaPipe hand tracking turns your webcam into a 3D controller. Rotate, zoom, and select without touching your mouse.",
                       "lineHeight": 1.5,
                       "fontFamily": "Inter",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1199,7 +1209,8 @@
                       "content": "Every generated part respects real-world engineering constraints — tolerances, material limits, and manufacturing feasibility.",
                       "lineHeight": 1.5,
                       "fontFamily": "Inter",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1261,7 +1272,8 @@
                       "content": "One click to export your design as production-ready STL. Print it, machine it, or share it with your team.",
                       "lineHeight": 1.5,
                       "fontFamily": "Inter",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1558,7 +1570,8 @@
                   "fill": "#FFFFFF",
                   "content": "ence",
                   "fontFamily": "JetBrains Mono",
-                  "fontSize": 16
+                  "fontSize": 16,
+                  "fontWeight": "normal"
                 }
               ]
             },
@@ -1590,7 +1603,8 @@
               "fill": "#475569",
               "content": "Designed & engineered with caffeine and conviction",
               "fontFamily": "Inter",
-              "fontSize": 12
+              "fontSize": 12,
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -1599,7 +1613,8 @@
               "fill": "#374151",
               "content": "© 2026 CADence. All rights reserved.",
               "fontFamily": "Inter",
-              "fontSize": 11
+              "fontSize": 11,
+              "fontWeight": "normal"
             }
           ]
         }
@@ -2408,7 +2423,8 @@
                       "lineHeight": 1.5,
                       "textAlign": "center",
                       "fontFamily": "Inter",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2453,7 +2469,8 @@
                           "fill": "#475569",
                           "content": "Type a command...",
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -3077,38 +3094,13 @@
                     },
                     {
                       "type": "text",
-                      "id": "y7C62",
-                      "name": "pttText",
-                      "fill": "#64748B",
-                      "content": "Push to Talk",
-                      "fontFamily": "Inter",
+                      "id": "OnoUm",
+                      "name": "pttLabel",
+                      "fill": "#94A3B8",
+                      "content": "Hold to Speak",
+                      "fontFamily": "JetBrains Mono",
                       "fontSize": 13,
                       "fontWeight": "500"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "ZRI6b",
-                      "name": "pttHint",
-                      "fill": "#0F172A",
-                      "cornerRadius": 4,
-                      "padding": [
-                        3,
-                        8
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "text",
-                          "id": "KYjxv",
-                          "name": "pttKey",
-                          "fill": "#475569",
-                          "content": "SPACE",
-                          "fontFamily": "JetBrains Mono",
-                          "fontSize": 9,
-                          "fontWeight": "600",
-                          "letterSpacing": 1
-                        }
-                      ]
                     }
                   ]
                 }
@@ -3257,7 +3249,8 @@
                               "content": "Build me a case for this Raspberry Pi",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -3290,7 +3283,8 @@
                           "content": "I'll create a case based on the spec dimensions. Starting with the base plate.",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -3348,7 +3342,8 @@
                               "fill": "#64748B",
                               "content": "cuboid 90x62x3 at [0,0,0]",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -3391,7 +3386,8 @@
                           "content": "Base plate created. Now adding walls...",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -3449,7 +3445,8 @@
                               "fill": "#64748B",
                               "content": "cuboid 3x62x25",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -3499,7 +3496,8 @@
                               "content": "Add mounting holes for the Pi",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -3532,7 +3530,8 @@
                           "content": "Adding 4 mounting holes at standard Pi positions.",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -3590,7 +3589,8 @@
                               "fill": "#64748B",
                               "content": "cylinder r=1.3 at [3.5,3.5,0]",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -3651,7 +3651,8 @@
                           "fill": "#475569",
                           "content": "Type a message...",
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4584,7 +4585,8 @@
                               "content": "Build me a case for this Raspberry Pi",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -4617,7 +4619,8 @@
                           "content": "I'll create a case based on the spec dimensions. Starting with the base plate.",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4675,7 +4678,8 @@
                               "fill": "#64748B",
                               "content": "cuboid 90x62x3 at [0,0,0]",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4718,7 +4722,8 @@
                           "content": "Base plate created. Now adding walls...",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4776,7 +4781,8 @@
                               "fill": "#64748B",
                               "content": "cuboid 3x62x25",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4826,7 +4832,8 @@
                               "content": "Add mounting holes for the Pi",
                               "lineHeight": 1.4,
                               "fontFamily": "Inter",
-                              "fontSize": 13
+                              "fontSize": 13,
+                              "fontWeight": "normal"
                             }
                           ]
                         }
@@ -4859,7 +4866,8 @@
                           "content": "Adding 4 mounting holes at standard Pi positions.",
                           "lineHeight": 1.4,
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -4917,7 +4925,8 @@
                               "fill": "#64748B",
                               "content": "cylinder r=1.3 at [3.5,3.5,0]",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 10
+                              "fontSize": 10,
+                              "fontWeight": "normal"
                             }
                           ]
                         },
@@ -4978,7 +4987,8 @@
                           "fill": "#475569",
                           "content": "Type a message...",
                           "fontFamily": "Inter",
-                          "fontSize": 13
+                          "fontSize": 13,
+                          "fontWeight": "normal"
                         }
                       ]
                     },
@@ -5172,7 +5182,8 @@
                           "fill": "#64748B",
                           "content": "Uploaded 2 min ago",
                           "fontFamily": "JetBrains Mono",
-                          "fontSize": 11
+                          "fontSize": 11,
+                          "fontWeight": "normal"
                         }
                       ]
                     }
@@ -6701,7 +6712,8 @@
                                   "width": "fill_container",
                                   "content": "Build me a case for this Raspberry Pi",
                                   "fontFamily": "Inter",
-                                  "fontSize": 13
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -6738,7 +6750,8 @@
                                   "width": "fill_container",
                                   "content": "I'll create a case based on the spec sheet dimensions. Starting with the base plate.",
                                   "fontFamily": "Inter",
-                                  "fontSize": 13
+                                  "fontSize": 13,
+                                  "fontWeight": "normal"
                                 }
                               ]
                             }
@@ -6789,7 +6802,8 @@
                               "fill": "$text-muted",
                               "content": "cuboid 90×62×3 at [0,0,0]",
                               "fontFamily": "JetBrains Mono",
-                              "fontSize": 11
+                              "fontSize": 11,
+                              "fontWeight": "normal"
                             },
                             {
                               "type": "icon_font",
@@ -6972,7 +6986,8 @@
                   "lineHeight": 1.5,
                   "textAlign": "center",
                   "fontFamily": "Inter",
-                  "fontSize": 14
+                  "fontSize": 14,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",

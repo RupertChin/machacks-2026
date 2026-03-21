@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback, useState } from "react";
 import * as THREE from "three";
 import { JscadEngine } from "@/lib/jscad/engine";
 import { createMaterial } from "@/lib/three/materials";
@@ -8,11 +8,13 @@ import type { ThreeCanvasHandle } from "@/components/viewport/ThreeCanvas";
 export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
   const engineRef = useRef<JscadEngine | null>(null);
   const sceneObjectIdsRef = useRef<Set<string>>(new Set());
+  const [objectCount, setObjectCount] = useState(0);
 
   useEffect(() => {
     engineRef.current = new JscadEngine(() => {
       console.warn("JSCAD Worker crashed — geometry state lost");
       sceneObjectIdsRef.current.clear();
+      setObjectCount(0);
     });
 
     return () => {
@@ -40,6 +42,7 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
           await engine.deleteObject(objectId);
           canvas.removeMesh(objectId);
           sceneObjectIdsRef.current.delete(objectId);
+          setObjectCount(sceneObjectIdsRef.current.size);
           return {
             op_id: opId,
             status: "success",
@@ -104,6 +107,7 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
 
           canvas.addMesh(r.object_id, mesh);
           sceneObjectIdsRef.current.add(r.object_id);
+          setObjectCount(sceneObjectIdsRef.current.size);
 
           return {
             op_id: opId,
@@ -130,6 +134,7 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
             sceneObjectIdsRef.current.add(item.object_id);
             objectIds.push(item.object_id);
           }
+          setObjectCount(sceneObjectIdsRef.current.size);
 
           // Compute overall bbox from all results
           let bbox: [number, number, number, number, number, number] | undefined;
@@ -174,6 +179,7 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
     await engineRef.current?.clearAll();
     canvasRef.current?.clearAll();
     sceneObjectIdsRef.current.clear();
+    setObjectCount(0);
   }, [canvasRef]);
 
   const getSceneObjectIds = useCallback(() => {
@@ -182,5 +188,5 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
 
   const getEngine = useCallback(() => engineRef.current, []);
 
-  return { executeTool, clearAll, getSceneObjectIds, getEngine };
+  return { executeTool, clearAll, getSceneObjectIds, getEngine, objectCount };
 }

@@ -12,9 +12,10 @@ import { Trash2 } from "lucide-react";
 
 interface ClearSceneButtonProps {
   onClick: () => void;
+  objectCount: number;
 }
 
-export function ClearSceneButton({ onClick }: ClearSceneButtonProps) {
+export function ClearSceneButton({ onClick, objectCount }: ClearSceneButtonProps) {
   const [open, setOpen] = useState(false);
 
   const handleConfirm = () => {
@@ -35,10 +36,18 @@ export function ClearSceneButton({ onClick }: ClearSceneButtonProps) {
             <DialogDescription>
               This will remove all objects from the scene. This action cannot be undone.
             </DialogDescription>
+            {objectCount > 0 && (
+              <p className="text-sm text-yellow-400 mt-2">
+                {objectCount} object{objectCount !== 1 ? "s" : ""} will be removed.
+              </p>
+            )}
           </DialogHeader>
           <DialogFooter>
             <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={handleConfirm}>Clear All</Button>
+            <Button variant="destructive" onClick={handleConfirm}>
+              <Trash2 className="h-4 w-4 mr-1" />
+              Clear Everything
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

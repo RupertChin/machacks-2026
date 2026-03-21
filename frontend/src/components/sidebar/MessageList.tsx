@@ -19,10 +19,13 @@ export function MessageList({ messages }: MessageListProps) {
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex items-center justify-center text-gray-500 text-sm p-4">
-        Start by typing a command or using push-to-talk
+        Type something or use push-to-talk to get started
       </div>
     );
   }
+
+  // Track isFirst for agent messages
+  let seenFirstAgent = false;
 
   return (
     <ScrollArea className="flex-1 min-h-0 p-3">
@@ -31,8 +34,11 @@ export function MessageList({ messages }: MessageListProps) {
           switch (msg.type) {
             case "user":
               return <UserMessage key={msg.id} message={msg} />;
-            case "agent":
-              return <AgentMessage key={msg.id} message={msg} />;
+            case "agent": {
+              const isFirst = !seenFirstAgent;
+              seenFirstAgent = true;
+              return <AgentMessage key={msg.id} message={msg} isFirst={isFirst} />;
+            }
             case "tool_call":
             case "tool_result_internal":
               return <ToolCallEntry key={msg.id} message={msg} />;

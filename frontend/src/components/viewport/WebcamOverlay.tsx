@@ -55,13 +55,16 @@ export function WebcamOverlay({ videoRef, rawLandmarks, gestureState }: WebcamOv
     }
   }, [rawLandmarks, gestureState]);
 
+  const isTracking = gestureState !== "idle";
+  const label = isTracking ? "Hand Track" : "Off";
+
   return (
     <div
       className="absolute top-4 left-4 rounded-xl overflow-hidden border-2 transition-colors"
       style={{
         width,
         height,
-        borderColor: gestureState === "idle" ? "#444" : "#00ff88",
+        borderColor: isTracking ? "#00ff88" : "#444",
         transform: "scaleX(-1)",
       }}
     >
@@ -78,6 +81,17 @@ export function WebcamOverlay({ videoRef, rawLandmarks, gestureState }: WebcamOv
         height={height}
         className="absolute top-0 left-0 pointer-events-none"
       />
+      {/* Label overlay (un-mirror the text) */}
+      <div
+        className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-xs font-medium backdrop-blur-sm"
+        style={{
+          transform: "scaleX(-1)",
+          backgroundColor: isTracking ? "rgba(0,255,136,0.2)" : "rgba(68,68,68,0.6)",
+          color: isTracking ? "#00ff88" : "#999",
+        }}
+      >
+        {label}
+      </div>
     </div>
   );
 }

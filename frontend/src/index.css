@@ -12,11 +12,19 @@
 }
 
 html,
-body,
+body {
+  height: 100%;
+  width: 100%;
+}
+
 #root {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+}
+
+@keyframes audioWave {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
 }
 
 @layer base {
