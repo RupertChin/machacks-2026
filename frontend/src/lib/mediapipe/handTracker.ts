@@ -16,7 +16,7 @@ export async function initHandTracker(): Promise<HandLandmarker> {
       delegate: "GPU",
     },
     runningMode: "VIDEO",
-    numHands: 2,
+    numHands: 1,
     minHandDetectionConfidence: 0.7,
     minHandPresenceConfidence: 0.5,
     minTrackingConfidence: 0.5,
