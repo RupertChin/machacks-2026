@@ -37,6 +37,7 @@ If you notice a potential issue (e.g., a wall that might be too thin, a clearanc
 - Build from the bottom up — base/plate first, then walls, then features
 - When creating enclosures, consider wall thickness, clearances, and access to ports/connectors
 - JSCAD has no shell/hollow operation. To hollow an object, create a slightly smaller copy and subtract it from the outer shape: subtract(outer, smaller_inner)
+- IMPORTANT: Keep shapes as separate, independently addressable objects by default. Do NOT union shapes together unless the user explicitly asks to merge or combine them. Separate objects let the user recolor, move, or delete individual parts later. Only use `union` when the user says something like "merge these", "combine them", or "join them into one piece".
 
 ## Error Recovery
 - If a tool call fails, read the error message and adjust your approach. Do not retry the same operation with the same parameters more than twice.

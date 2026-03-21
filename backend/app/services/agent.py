@@ -365,13 +365,6 @@ class AgentService:
 
                         op_id = session.scene_state.generate_op_id()
 
-                        # Apply scene state updates for set_color/rename_object
-                        if tool_name in ("set_color", "rename_object"):
-                            apply_tool_result(
-                                session.scene_state, tool_name, tool_input,
-                                "success", {"object_id": tool_input.get("object_id", "")}
-                            )
-
                         await event_queue.put(
                             tool_result_internal_event(op_id, tool_name, tool_input, result)
                         )
@@ -543,18 +536,6 @@ class AgentService:
 
         elif tool_name == "design_review":
             return await self._run_design_review(session)
-
-        elif tool_name == "set_color":
-            obj_id = tool_input.get("object_id", "")
-            if obj_id in scene.objects:
-                return {"status": "success", "object_id": obj_id, "color": tool_input.get("color", "")}
-            return {"error": f"Object {obj_id} not found"}
-
-        elif tool_name == "rename_object":
-            obj_id = tool_input.get("object_id", "")
-            if obj_id in scene.objects:
-                return {"status": "success", "object_id": obj_id, "label": tool_input.get("label", "")}
-            return {"error": f"Object {obj_id} not found"}
 
         return {"error": f"Unknown internal tool: {tool_name}"}
 

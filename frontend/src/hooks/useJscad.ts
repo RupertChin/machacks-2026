@@ -70,8 +70,17 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
           };
         }
 
-        // Remove consumed objects for boolean operations
+        // Capture color from first consumed object before removing (for union/intersect)
         const consumedIds = parameters.consumed_object_ids as string[] | undefined;
+        let inheritedColor: string | undefined;
+        if (consumedIds && consumedIds.length > 0) {
+          const firstMesh = canvas.getMesh(consumedIds[0]);
+          if (firstMesh && firstMesh.material instanceof THREE.MeshStandardMaterial) {
+            inheritedColor = "#" + firstMesh.material.color.getHexString();
+          }
+        }
+
+        // Remove consumed objects for boolean operations
         if (consumedIds) {
           for (const id of consumedIds) {
             canvas.removeMesh(id);
@@ -89,7 +98,7 @@ export function useJscad(canvasRef: React.RefObject<ThreeCanvasHandle | null>) {
           geometry.setAttribute("position", new THREE.BufferAttribute(r.positions, 3));
           geometry.setAttribute("normal", new THREE.BufferAttribute(r.normals, 3));
 
-          const color = parameters.color;
+          const color = parameters.color || inheritedColor;
           const material = createMaterial(color);
           const mesh = new THREE.Mesh(geometry, material);
 
