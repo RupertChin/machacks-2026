@@ -1,4 +1,4 @@
-export type GestureState = "idle" | "orbit" | "pan" | "zoom" | "reset";
+export type GestureState = "idle" | "orbit" | "pan" | "zoom" | "reset" | "recording";
 
 export interface GestureOutput {
   state: GestureState;
@@ -21,16 +21,23 @@ interface TrackingContext {
   initialized: boolean;
   fistStartTime: number | null;
   fistTriggered: boolean;
+  // Debounce: require N consecutive frames before committing a state transition
+  pendingState: GestureState;
+  pendingFrameCount: number;
+  confirmedState: GestureState;
 }
 
 const CONFIG = {
   SMOOTHING_FACTOR: 0.2,
   ROTATION_SENSITIVITY: 3.4,
   PAN_SENSITIVITY: 5.0,
-  ZOOM_SENSITIVITY: 15.0,
+  ZOOM_SENSITIVITY: 80.0,
   DEAD_ZONE: 0.004,
   PINCH_THRESHOLD: 0.06,
   FIST_HOLD_MS: 1000,
+  THUMB_EXTENSION_RATIO: 1.3,
+  DEBOUNCE_ENTER_FRAMES: 3,
+  DEBOUNCE_EXIT_FRAMES: 4,
 } as const;
 
 export function createInitialContext(): TrackingContext {
@@ -42,6 +49,9 @@ export function createInitialContext(): TrackingContext {
     initialized: false,
     fistStartTime: null,
     fistTriggered: false,
+    pendingState: "idle",
+    pendingFrameCount: 0,
+    confirmedState: "idle",
   };
 }
 
@@ -68,9 +78,9 @@ function palmCenter(lm: Point3D[]): { x: number; y: number } {
 }
 
 function isThumbExtended(lm: Point3D[]): boolean {
-  // Compare thumb tip distance from wrist vs thumb MCP distance from wrist
-  // More robust than Y comparison for varying hand orientations
-  return dist3D(lm[4], lm[0]) > dist3D(lm[2], lm[0]);
+  // Thumb tip must be significantly farther from wrist than thumb MCP —
+  // a 1.3x ratio filters out the naturally resting thumb position
+  return dist3D(lm[4], lm[0]) > dist3D(lm[2], lm[0]) * CONFIG.THUMB_EXTENSION_RATIO;
 }
 
 function isFingerExtended(lm: Point3D[], tipIdx: number, mcpIdx: number): boolean {
@@ -119,6 +129,16 @@ function isClosedFist(lm: Point3D[]): boolean {
   );
 }
 
+// Index finger raised: only index extended, middle/ring/pinky curled (thumb ignored — too finicky)
+function isIndexRaised(lm: Point3D[]): boolean {
+  return (
+    isFingerExtended(lm, 8, 5) &&    // index extended
+    isFingerCurled(lm, 12, 9) &&     // middle curled
+    isFingerCurled(lm, 16, 13) &&    // ring curled
+    isFingerCurled(lm, 20, 17)       // pinky curled
+  );
+}
+
 function pinchPoint(lm: Point3D[]): { x: number; y: number } {
   return {
     x: 1 - (lm[4].x + lm[8].x) / 2,
@@ -133,7 +153,7 @@ const IDLE_OUTPUT: GestureOutput = {
   panOffset: { x: 0, y: 0 },
 };
 
-export function detectGesture(
+function detectRawGesture(
   ctx: TrackingContext,
   allLandmarks: Array<Array<{ x: number; y: number; z: number }>>,
 ): { context: TrackingContext; output: GestureOutput } {
@@ -167,7 +187,7 @@ export function detectGesture(
   // Reset fist timer if hand is not a fist
   const newCtx: TrackingContext = { ...ctx, fistStartTime: null, fistTriggered: false };
 
-  // Finger gun = rotate (with embedded zoom via pinch distance)
+  // Finger gun = rotate (thumb+index extended, others curled — checked before index raised since it's more specific)
   if (isFingerGun(lm)) {
     const pc = palmCenter(lm);
     const currentPinchDist = pinchDist(lm);
@@ -215,6 +235,14 @@ export function detectGesture(
     };
   }
 
+  // Index finger raised = push-to-talk recording (only index up, regardless of thumb)
+  if (isIndexRaised(lm)) {
+    return {
+      context: { ...newCtx, initialized: false },
+      output: { state: "recording", rotationDelta: { x: 0, y: 0 }, zoomDelta: 0, panOffset: { x: 0, y: 0 } },
+    };
+  }
+
   // Pinch + 3 open fingers = pan
   if (isPinchThreeOpen(lm)) {
     const pp = pinchPoint(lm);
@@ -248,5 +276,40 @@ export function detectGesture(
   return {
     context: { ...newCtx, initialized: false },
     output: IDLE_OUTPUT,
+  };
+}
+
+export function detectGesture(
+  ctx: TrackingContext,
+  allLandmarks: Array<Array<{ x: number; y: number; z: number }>>,
+): { context: TrackingContext; output: GestureOutput } {
+  const { context: rawCtx, output: rawOutput } = detectRawGesture(ctx, allLandmarks);
+  const rawState = rawOutput.state;
+
+  // Count consecutive frames of the same raw state
+  let pendingState = rawCtx.pendingState;
+  let pendingFrameCount = rawCtx.pendingFrameCount;
+  if (rawState === pendingState) {
+    pendingFrameCount++;
+  } else {
+    pendingState = rawState;
+    pendingFrameCount = 1;
+  }
+
+  // Determine threshold: exiting "recording" is stickier to avoid false stops
+  let confirmedState = rawCtx.confirmedState;
+  const isExitingRecording = confirmedState === "recording" && rawState !== "recording";
+  const threshold = isExitingRecording
+    ? CONFIG.DEBOUNCE_EXIT_FRAMES
+    : CONFIG.DEBOUNCE_ENTER_FRAMES;
+
+  if (pendingFrameCount >= threshold) {
+    confirmedState = rawState;
+  }
+
+  return {
+    context: { ...rawCtx, pendingState, pendingFrameCount, confirmedState },
+    // Use raw movement deltas but override state with debounced version
+    output: { ...rawOutput, state: confirmedState },
   };
 }

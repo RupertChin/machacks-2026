@@ -9,11 +9,12 @@ interface GestureControllerProps {
     zoomDelta: number;
     panOffset: { x: number; y: number };
   } | null;
+  suppressCamera?: boolean;
 }
 
-export function GestureController({ cameraController, gestureOutput }: GestureControllerProps) {
+export function GestureController({ cameraController, gestureOutput, suppressCamera }: GestureControllerProps) {
   useEffect(() => {
-    if (!cameraController || !gestureOutput) return;
+    if (!cameraController || !gestureOutput || suppressCamera) return;
 
     if (gestureOutput.state === "rotate" || gestureOutput.state === "orbit") {
       cameraController.orbit(gestureOutput.rotationDelta.y, gestureOutput.rotationDelta.x);
