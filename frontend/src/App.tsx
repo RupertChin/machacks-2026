@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import { Viewport } from "./components/Viewport";
 import { Sidebar } from "./components/Sidebar";
 import { Toolbar } from "./components/toolbar/Toolbar";
@@ -22,11 +22,14 @@ function App() {
   const { executeTool, clearAll, getSceneObjectIds, getEngine } = useJscad(canvasRef);
 
   // Voice recording
-  const { status: voiceStatus, setStatus: setVoiceStatus, startRecording, stopRecording, cleanup: cleanupVoice } = useVoice();
+  const { status: voiceStatus, setStatus: setVoiceStatus, startRecording, stopRecording, cleanup: cleanupVoice, isRecordingRef } = useVoice();
 
-  // Gesture tracking (suppressed during voice recording)
-  const { gesture, videoRef, rawLandmarks, isLoading: gesturesLoading } = useGestures(
-    voiceStatus === "recording"
+  // Track how recording was initiated to avoid conflicts
+  const recordingSourceRef = useRef<"button" | "gesture" | null>(null);
+
+  // Gesture tracking (only suppress during button-initiated recording)
+  const { gesture, videoRef, rawLandmarks, isLoading: gesturesLoading, getMediaStream } = useGestures(
+    voiceStatus === "recording" && recordingSourceRef.current === "button"
   );
 
   // Agent communication
@@ -48,6 +51,7 @@ function App() {
 
   // Voice controls handlers
   const handleStartRecording = useCallback(async () => {
+    recordingSourceRef.current = "button";
     await startRecording();
   }, [startRecording]);
 
@@ -59,9 +63,43 @@ function App() {
     } catch (err) {
       console.error("Voice recording error:", err);
     } finally {
+      recordingSourceRef.current = null;
       setVoiceStatus("idle");
     }
   }, [stopRecording, sendVoiceMessage, setVoiceStatus]);
+
+  // Peace sign gesture → push-to-talk
+  const prevGestureStateRef = useRef(gesture.state);
+  useEffect(() => {
+    const prev = prevGestureStateRef.current;
+    const curr = gesture.state;
+    prevGestureStateRef.current = curr;
+
+    if (prev === curr) return;
+
+    // Index finger raised → begin recording (only if idle and not already recording)
+    if (curr === "recording" && voiceStatus === "idle" && !isProcessing) {
+      recordingSourceRef.current = "gesture";
+      // Pass shared media stream to avoid getUserMedia (which requires user gesture)
+      startRecording(getMediaStream());
+    }
+
+    // Gesture ended → stop recording (only if we started it via gesture)
+    if (prev === "recording" && curr !== "recording" && recordingSourceRef.current === "gesture") {
+      if (isRecordingRef.current) {
+        stopRecording()
+          .then((blob) => {
+            setVoiceStatus("sending");
+            return sendVoiceMessage(blob);
+          })
+          .catch((err) => console.error("Gesture voice recording error:", err))
+          .finally(() => {
+            recordingSourceRef.current = null;
+            setVoiceStatus("idle");
+          });
+      }
+    }
+  }, [gesture.state, isProcessing, startRecording, stopRecording, sendVoiceMessage, setVoiceStatus, getMediaStream, isRecordingRef]);
 
   // Toolbar handlers
   const handleExport = useCallback(async () => {
@@ -135,6 +173,7 @@ function App() {
       <GestureController
         cameraController={cameraController}
         gestureOutput={gesture}
+        suppressCamera={voiceStatus === "recording"}
       />
     </div>
   );
