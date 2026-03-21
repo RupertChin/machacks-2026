@@ -151,11 +151,16 @@ function handleExecuteTool(op_id: string, tool_name: string, params: Record<stri
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let geom: any;
         switch (pType) {
-          case "cuboid":
+          case "cuboid": {
+            const size: Vec3 = dims.size
+              ? (dims.size as Vec3)
+              : [dims.width ?? 10, dims.height ?? 10, dims.depth ?? 10];
+            // Swap Y↔Z axes for size (no negation — JSCAD requires positive sizes)
             geom = jscad.primitives.cuboid({
-              size: yUpToZUp(dims.size as Vec3),
+              size: [size[0], size[2], size[1]],
             });
             break;
+          }
           case "cylinder":
             geom = jscad.primitives.cylinder({
               radius: dims.radius,
