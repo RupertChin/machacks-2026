@@ -1,4 +1,4 @@
-export type GestureState = "idle" | "orbit" | "pan" | "zoom" | "reset";
+export type GestureState = "idle" | "orbit" | "pan" | "zoom" | "reset" | "recording";
 
 export interface GestureOutput {
   state: GestureState;
@@ -27,7 +27,7 @@ const CONFIG = {
   SMOOTHING_FACTOR: 0.2,
   ROTATION_SENSITIVITY: 3.4,
   PAN_SENSITIVITY: 5.0,
-  ZOOM_SENSITIVITY: 15.0,
+  ZOOM_SENSITIVITY: 80.0,
   DEAD_ZONE: 0.004,
   PINCH_THRESHOLD: 0.06,
   FIST_HOLD_MS: 1000,
@@ -119,6 +119,17 @@ function isClosedFist(lm: Point3D[]): boolean {
   );
 }
 
+// Peace sign: index+middle extended, thumb/ring/pinky curled
+function isPeaceSign(lm: Point3D[]): boolean {
+  return (
+    !isThumbExtended(lm) &&
+    isFingerExtended(lm, 8, 5) &&    // index extended
+    isFingerExtended(lm, 12, 9) &&   // middle extended
+    isFingerCurled(lm, 16, 13) &&    // ring curled
+    isFingerCurled(lm, 20, 17)       // pinky curled
+  );
+}
+
 function pinchPoint(lm: Point3D[]): { x: number; y: number } {
   return {
     x: 1 - (lm[4].x + lm[8].x) / 2,
@@ -166,6 +177,14 @@ export function detectGesture(
 
   // Reset fist timer if hand is not a fist
   const newCtx: TrackingContext = { ...ctx, fistStartTime: null, fistTriggered: false };
+
+  // Peace sign = push-to-talk recording
+  if (isPeaceSign(lm)) {
+    return {
+      context: { ...newCtx, initialized: false },
+      output: { state: "recording", rotationDelta: { x: 0, y: 0 }, zoomDelta: 0, panOffset: { x: 0, y: 0 } },
+    };
+  }
 
   // Finger gun = rotate (with embedded zoom via pinch distance)
   if (isFingerGun(lm)) {
