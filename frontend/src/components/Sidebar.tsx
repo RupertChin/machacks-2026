@@ -1,4 +1,5 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { ChatPanel } from "./sidebar/ChatPanel";
 import { ConstraintPanel } from "./sidebar/ConstraintPanel";
 import type { ChatMessage } from "@/hooks/useAgent";
@@ -27,13 +28,32 @@ export function Sidebar({
   onToggleConstraint,
   uploadProgress,
 }: SidebarProps) {
+  const [activeTab, setActiveTab] = useState("chat");
+
+  const tabStyle = (tab: string) =>
+    activeTab === tab
+      ? { backgroundColor: '#22D3EE', color: '#0A0F1C' }
+      : {};
+
   return (
-    <div className="w-[30%] min-w-[300px] border-l border-gray-800 bg-gray-950 flex flex-col">
-      <Tabs defaultValue="chat" className="flex flex-col flex-1 overflow-hidden">
-        <TabsList className="mx-2 mt-2 bg-gray-900">
-          <TabsTrigger value="chat" className="flex-1 data-[state=active]:bg-cadence data-[state=active]:text-white">Chat</TabsTrigger>
-          <TabsTrigger value="constraints" className="flex-1 data-[state=active]:bg-cadence data-[state=active]:text-white">Constraints</TabsTrigger>
-        </TabsList>
+    <div className="w-[30%] min-w-[300px] border-l border-[#1E293B] bg-[#0A0F1C] flex flex-col">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex flex-col flex-1 overflow-hidden">
+        <div className="mx-2 mt-2 bg-[#1E293B] rounded-lg h-9 p-[3px] flex">
+          <button
+            onClick={() => setActiveTab("chat")}
+            className="flex-1 font-mono text-xs font-bold tracking-widest text-[#64748B] rounded-md transition-colors"
+            style={tabStyle("chat")}
+          >
+            CHAT
+          </button>
+          <button
+            onClick={() => setActiveTab("constraints")}
+            className="flex-1 font-mono text-xs font-bold tracking-widest text-[#64748B] rounded-md transition-colors"
+            style={tabStyle("constraints")}
+          >
+            CONSTRAINTS
+          </button>
+        </div>
         <TabsContent value="chat" className="flex-1 overflow-hidden flex flex-col m-0">
           <ChatPanel
             messages={messages}

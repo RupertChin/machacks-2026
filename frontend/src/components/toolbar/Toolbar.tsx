@@ -13,9 +13,9 @@ interface ToolbarProps {
 
 export function Toolbar({ onExport, onDesignReview, onClearScene, isProcessing, objectCount }: ToolbarProps) {
   return (
-    <div className="h-12 border-b border-gray-800 flex items-center px-4 gap-2 bg-gray-950">
-      <Link to="/" className="font-semibold text-sm mr-4 hover:opacity-80 transition-opacity">
-        <span className="text-cadence">CAD</span>ence
+    <div className="h-12 border-b border-[#1E293B] flex items-center px-4 gap-2 bg-[#0F172A]">
+      <Link to="/" className="font-mono font-bold text-lg tracking-wide mr-4 hover:opacity-80 transition-opacity">
+        <span style={{ color: '#22D3EE' }}>CAD</span><span className="text-white">ence</span>
       </Link>
       <div className="flex-1" />
       <DesignReviewButton onClick={onDesignReview} disabled={isProcessing} />
