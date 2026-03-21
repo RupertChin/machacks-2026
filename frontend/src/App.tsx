@@ -22,7 +22,7 @@ function App() {
   const { executeTool, clearAll, getSceneObjectIds, getEngine } = useJscad(canvasRef);
 
   // Voice recording
-  const { status: voiceStatus, setStatus: setVoiceStatus, startRecording, stopRecording, cleanup: cleanupVoice } = useVoice();
+  const { status: voiceStatus, setStatus: setVoiceStatus, startRecording, stopRecording, cleanup: cleanupVoice, isRecordingRef } = useVoice();
 
   // Track how recording was initiated to avoid conflicts
   const recordingSourceRef = useRef<"button" | "gesture" | null>(null);
@@ -84,9 +84,9 @@ function App() {
       startRecording(getMediaStream());
     }
 
-    // Peace sign ended → stop recording (only if we started it via gesture)
+    // Gesture ended → stop recording (only if we started it via gesture)
     if (prev === "recording" && curr !== "recording" && recordingSourceRef.current === "gesture") {
-      if (voiceStatus === "recording") {
+      if (isRecordingRef.current) {
         stopRecording()
           .then((blob) => {
             setVoiceStatus("sending");
@@ -99,7 +99,7 @@ function App() {
           });
       }
     }
-  }, [gesture.state, voiceStatus, isProcessing, startRecording, stopRecording, sendVoiceMessage, setVoiceStatus, getMediaStream]);
+  }, [gesture.state, isProcessing, startRecording, stopRecording, sendVoiceMessage, setVoiceStatus, getMediaStream, isRecordingRef]);
 
   // Toolbar handlers
   const handleExport = useCallback(async () => {

@@ -7,12 +7,23 @@ export function useVoice() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
+  const isRecordingRef = useRef(false);
 
   const startRecording = useCallback(async (sharedStream?: MediaStream | null) => {
     try {
+      isRecordingRef.current = true;
+
+      // Validate cached stream still has live audio tracks
+      if (streamRef.current) {
+        const hasLiveTrack = streamRef.current.getAudioTracks().some(t => t.readyState === "live");
+        if (!hasLiveTrack) {
+          streamRef.current = null;
+        }
+      }
+
       if (!streamRef.current) {
-        // Prefer shared stream's audio track (avoids getUserMedia from non-user-gesture context)
-        const audioTrack = sharedStream?.getAudioTracks()[0];
+        // Prefer shared stream's live audio track (avoids getUserMedia from non-user-gesture context)
+        const audioTrack = sharedStream?.getAudioTracks().find(t => t.readyState === "live");
         if (audioTrack) {
           streamRef.current = new MediaStream([audioTrack]);
         } else {
@@ -46,6 +57,7 @@ export function useVoice() {
       setStatus("recording");
     } catch (err) {
       console.error("Failed to start recording:", err);
+      isRecordingRef.current = false;
       setStatus("idle");
     }
   }, []);
@@ -63,7 +75,9 @@ export function useVoice() {
           type: recorder.mimeType || "audio/webm",
         });
         chunksRef.current = [];
-        setStatus("idle");
+        isRecordingRef.current = false;
+        // Don't set status here — let callers manage the transition
+        // (e.g., "recording" → "sending" → "idle")
         resolve(blob);
       };
 
@@ -77,8 +91,9 @@ export function useVoice() {
     }
     streamRef.current?.getTracks().forEach((t) => t.stop());
     streamRef.current = null;
+    isRecordingRef.current = false;
     setStatus("idle");
   }, []);
 
-  return { status, setStatus, startRecording, stopRecording, cleanup };
+  return { status, setStatus, startRecording, stopRecording, cleanup, isRecordingRef };
 }
