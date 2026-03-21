@@ -31,6 +31,7 @@ export function createMaterial(color?: string): THREE.MeshStandardMaterial {
     color: new THREE.Color(c),
     metalness: 0.1,
     roughness: 0.6,
+    side: THREE.DoubleSide,
   });
 }
 
