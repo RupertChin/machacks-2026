@@ -119,10 +119,9 @@ function isClosedFist(lm: Point3D[]): boolean {
   );
 }
 
-// Index finger raised: only index extended, all others curled
+// Index finger raised: only index extended, middle/ring/pinky curled (thumb ignored — too finicky)
 function isIndexRaised(lm: Point3D[]): boolean {
   return (
-    !isThumbExtended(lm) &&
     isFingerExtended(lm, 8, 5) &&    // index extended
     isFingerCurled(lm, 12, 9) &&     // middle curled
     isFingerCurled(lm, 16, 13) &&    // ring curled
@@ -178,15 +177,7 @@ export function detectGesture(
   // Reset fist timer if hand is not a fist
   const newCtx: TrackingContext = { ...ctx, fistStartTime: null, fistTriggered: false };
 
-  // Index finger raised = push-to-talk recording
-  if (isIndexRaised(lm)) {
-    return {
-      context: { ...newCtx, initialized: false },
-      output: { state: "recording", rotationDelta: { x: 0, y: 0 }, zoomDelta: 0, panOffset: { x: 0, y: 0 } },
-    };
-  }
-
-  // Finger gun = rotate (with embedded zoom via pinch distance)
+  // Finger gun = rotate (thumb+index extended, others curled — checked before index raised since it's more specific)
   if (isFingerGun(lm)) {
     const pc = palmCenter(lm);
     const currentPinchDist = pinchDist(lm);
@@ -231,6 +222,14 @@ export function detectGesture(
         zoomDelta: -pinchDelta * CONFIG.ZOOM_SENSITIVITY,
         panOffset: { x: 0, y: 0 },
       },
+    };
+  }
+
+  // Index finger raised = push-to-talk recording (only index up, regardless of thumb)
+  if (isIndexRaised(lm)) {
+    return {
+      context: { ...newCtx, initialized: false },
+      output: { state: "recording", rotationDelta: { x: 0, y: 0 }, zoomDelta: 0, panOffset: { x: 0, y: 0 } },
     };
   }
 

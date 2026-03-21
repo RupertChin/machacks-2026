@@ -29,8 +29,9 @@ export function WebcamOverlay({ videoRef, rawLandmarks, gestureState }: WebcamOv
     ctx.clearRect(0, 0, width, height);
     if (!rawLandmarks) return;
 
+    const isRecording = gestureState === "recording";
     const isTracking = gestureState !== "idle";
-    const color = isTracking ? "#00ff88" : "#ffaa00";
+    const color = isRecording ? "#ff4444" : isTracking ? "#00ff88" : "#ffaa00";
 
     // Draw skeleton lines
     ctx.strokeStyle = color;
@@ -61,7 +62,7 @@ export function WebcamOverlay({ videoRef, rawLandmarks, gestureState }: WebcamOv
       style={{
         width,
         height,
-        borderColor: gestureState === "idle" ? "#444" : "#00ff88",
+        borderColor: gestureState === "recording" ? "#ff4444" : gestureState === "idle" ? "#444" : "#00ff88",
         transform: "scaleX(-1)",
       }}
     >
