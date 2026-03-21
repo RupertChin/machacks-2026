@@ -25,7 +25,7 @@ TOOL_DEFINITIONS = [
             "type": "object",
             "properties": {
                 "type": {"type": "string", "enum": ["cuboid", "cylinder", "sphere", "torus"]},
-                "dimensions": {"type": "object", "description": "Shape-specific dimensions in mm. Cuboid: {size: [x,y,z]}. Cylinder: {radius, height}. Sphere: {radius}. Torus: {innerRadius, outerRadius}."},
+                "dimensions": {"type": "object", "description": "Shape-specific dimensions in mm. Cuboid: {\"width\": x, \"height\": y, \"depth\": z}. Cylinder: {\"radius\": r, \"height\": h}. Sphere: {\"radius\": r}. Torus: {\"innerRadius\": r1, \"outerRadius\": r2}."},
                 "position": {"type": "array", "items": {"type": "number"}, "description": "[x, y, z] center position in mm"},
                 "rotation": {"type": "array", "items": {"type": "number"}, "description": "[rx, ry, rz] rotation in degrees. Optional, defaults to [0,0,0]"},
                 "color": {"type": "string", "description": "Hex color string. Optional, auto-assigned if omitted"},

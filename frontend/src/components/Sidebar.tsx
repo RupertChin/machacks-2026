@@ -41,7 +41,7 @@ export function Sidebar({
             onSendMessage={onSendMessage}
           />
         </TabsContent>
-        <TabsContent value="constraints" className="flex-1 overflow-hidden m-0">
+        <TabsContent value="constraints" className="flex-1 overflow-hidden flex flex-col m-0">
           <ConstraintPanel
             constraints={constraints}
             specMetadata={specMetadata}

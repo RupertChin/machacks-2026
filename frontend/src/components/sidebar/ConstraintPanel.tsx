@@ -105,7 +105,7 @@ export function ConstraintPanel({
       </div>
 
       {/* Constraint list */}
-      <ScrollArea className="flex-1">
+      <ScrollArea className="flex-1 min-h-0">
         <div className="p-2">
           {Object.entries(grouped).map(([category, items]) => (
             <div key={category} className="mb-3">
