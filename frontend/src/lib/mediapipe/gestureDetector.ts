@@ -119,12 +119,12 @@ function isClosedFist(lm: Point3D[]): boolean {
   );
 }
 
-// Peace sign: index+middle extended, thumb/ring/pinky curled
-function isPeaceSign(lm: Point3D[]): boolean {
+// Index finger raised: only index extended, all others curled
+function isIndexRaised(lm: Point3D[]): boolean {
   return (
     !isThumbExtended(lm) &&
     isFingerExtended(lm, 8, 5) &&    // index extended
-    isFingerExtended(lm, 12, 9) &&   // middle extended
+    isFingerCurled(lm, 12, 9) &&     // middle curled
     isFingerCurled(lm, 16, 13) &&    // ring curled
     isFingerCurled(lm, 20, 17)       // pinky curled
   );
@@ -178,8 +178,8 @@ export function detectGesture(
   // Reset fist timer if hand is not a fist
   const newCtx: TrackingContext = { ...ctx, fistStartTime: null, fistTriggered: false };
 
-  // Peace sign = push-to-talk recording
-  if (isPeaceSign(lm)) {
+  // Index finger raised = push-to-talk recording
+  if (isIndexRaised(lm)) {
     return {
       context: { ...newCtx, initialized: false },
       output: { state: "recording", rotationDelta: { x: 0, y: 0 }, zoomDelta: 0, panOffset: { x: 0, y: 0 } },
